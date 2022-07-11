@@ -1,7 +1,14 @@
-FROM python:3.9-slim
+FROM python:latest
 
-copy . /app
+# setting working directory
 workdir /app
-RUN pip install -r requirements.txt
-EXPOSE 80
-CMD ["uvicorn", "server:app", "--host", "0.0.0.0", "--port", "80"]
+
+# install dependencies
+copy ./requirements.txt /app
+RUN pip install --no-cache-dir --upgrade -r requirements.txt
+
+# copy the scripts to the folder
+copy . /app
+
+# start the server
+CMD ["uvicorn", "server:app", "--host", "0.0.0.0", "--port", "80", "--reload", "--reload-include" "*"]
